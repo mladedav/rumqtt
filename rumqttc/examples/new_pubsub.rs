@@ -1,6 +1,6 @@
 use tokio::{task, time};
 
-use rumqttc::{self, ReqHandler, MqttOptions, QoS, Publisher};
+use rumqttc::{self, MqttOptions, Publisher, QoS, ReqHandler};
 use std::error::Error;
 use std::time::Duration;
 
@@ -16,29 +16,30 @@ async fn main() -> Result<(), Box<dyn Error>> {
     task::spawn(async move {
         sub_handler.start().await.unwrap();
     });
-    
-    let subscriber = client.subscriber("hello/world", QoS::AtMostOnce).await.unwrap();
-    let publisher = client.publisher("hello/world");
 
+    let publisher = client.publisher("hello/world");
+    let subscriber = client
+        .subscriber("hello/world", QoS::AtMostOnce)
+        .await?;
     task::spawn(async move {
-        requests(publisher).await;
+        publish(publisher).await;
         time::sleep(Duration::from_secs(3)).await;
     });
 
     loop {
-        let publish = subscriber.next().await;
-        println!("{:?}", publish.unwrap());
+        let publish = subscriber.next().await?;
+        println!("{:?}", publish);
+        if publish.topic.contains("10") {
+            subscriber.unsubscribe().await?;
+        } 
     }
 }
 
-async fn requests(mut publisher: Publisher) {
+async fn publish(mut publisher: Publisher) {
     publisher.qos = QoS::ExactlyOnce;
     publisher.retain = false;
     for i in 1..=10 {
-        publisher
-            .publish(vec![1; i])
-            .await
-            .unwrap();
+        publisher.publish(vec![1; i]).await.unwrap();
 
         time::sleep(Duration::from_secs(1)).await;
     }
