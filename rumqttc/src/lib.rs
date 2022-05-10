@@ -129,7 +129,7 @@ pub type Incoming = Packet;
 #[derive(Debug, Eq, PartialEq, Clone)]
 pub enum Outgoing {
     /// Publish packet with packet identifier. 0 implies QoS 0
-    Publish(u16),
+    Publish(u16, String),
     /// Subscribe packet with packet identifier
     Subscribe(u16),
     /// Unsubscribe packet with packet identifier

@@ -234,7 +234,7 @@ impl MqttState {
             self.inflight += 1;
 
             publish.write(&mut self.write)?;
-            let event = Event::Outgoing(Outgoing::Publish(publish.pkid));
+            let event = Event::Outgoing(Outgoing::Publish(publish.pkid, publish.topic));
             self.events.push_back(event);
             self.collision_ping_count = 0;
         }
@@ -278,7 +278,7 @@ impl MqttState {
     fn handle_incoming_pubcomp(&mut self, pubcomp: &PubComp) -> Result<(), StateError> {
         if let Some(publish) = self.check_collision(pubcomp.pkid) {
             publish.write(&mut self.write)?;
-            let event = Event::Outgoing(Outgoing::Publish(publish.pkid));
+            let event = Event::Outgoing(Outgoing::Publish(publish.pkid, publish.topic));
             self.events.push_back(event);
             self.collision_ping_count = 0;
         }
@@ -336,7 +336,7 @@ impl MqttState {
         );
 
         publish.write(&mut self.write)?;
-        let event = Event::Outgoing(Outgoing::Publish(publish.pkid));
+        let event = Event::Outgoing(Outgoing::Publish(publish.pkid, publish.topic));
         self.events.push_back(event);
         Ok(())
     }
