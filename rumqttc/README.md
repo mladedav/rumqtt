@@ -1,3 +1,12 @@
+**Note:** This crate is made from the [fork](https://github.com/spotflow-io/rumqtt) of `rumqtt` that adds the following features:
+
+- The ability to use `native-tls` instead of `rustls` for TLS connections (has been added to the original crate since then).
+- The propagation of the message topic to `Outgoing::Publish` so that it's easier pair acknowledgements with the original messages (will be solved in https://github.com/bytebeamio/rumqtt/issues/349).
+
+**Once the original crate has both features, this crate won't be necessary any longer. We'll most likely yank it then.**
+
+*The original README follows:*
+
 # rumqttc
 
 A pure rust MQTT client which strives to be robust, efficient and easy to use.

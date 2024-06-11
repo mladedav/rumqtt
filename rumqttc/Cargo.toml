@@ -1,9 +1,9 @@
 [package]
-name = "rumqttc"
+name = "spotflow-rumqttc-fork"
 version = "0.12.0"
-description = "An efficient and robust mqtt client for your connected devices"
+description = "A temporary fork of rumqtt that allows getting packet ID from sent messages"
 license = "Apache-2.0"
-repository = "https://github.com/bytebeamio/rumqtt"
+repository = "https://github.com/spotflow-io/rumqtt"
 authors = ["tekjar"]
 edition = "2018"
 keywords = ["mqtt", "iot", "coap", "http"]
